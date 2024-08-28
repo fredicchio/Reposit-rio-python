@@ -1,5 +1,6 @@
 import tkinter as tk
-from manutencao import bcidades
+from tkinter import ttk
+from manutencao import bcidades, populate_treeview
 
 class Cidade:
     def __init__(self, root):
@@ -56,6 +57,22 @@ class Cidade:
         root.grid_columnconfigure(2, weight=1)
         root.grid_columnconfigure(3, weight=1)
 
+        self.columns = ('ID', 'CIDADE', 'ESTADO', 'UF')
+        self.treeview = ttk.Treeview(root, columns=self.columns, show="headings")
+        for col in self.columns:
+            self.treeview.heading(col, text=col)
+        self.treeview.grid(row=8, column=0, columnspan=3, sticky="nsew")
+
+        # Chama o método de refresh ao iniciar
+        self.refresh_treeview()
+
+    def refresh_treeview(self):
+        data = bcidades().selectall()
+        if not data:
+            print("Nenhum dado encontrado ou ocorreu um erro ao buscar os dados.")
+        else:
+            populate_treeview(self.treeview, data)
+
     def buscar(self):
         codcidade = self.entrada_codcidade.get()
         cidade = bcidades(codcidade=codcidade)
@@ -68,6 +85,7 @@ class Cidade:
             self.entrada_uf.delete(0, tk.END)
             self.entrada_uf.insert(0, cidade.uf)
         print(mensagem)
+        self.refresh_treeview()
 
     def adicionar(self):
         cidade = bcidades(
@@ -77,6 +95,7 @@ class Cidade:
         )
         mensagem = cidade.insertCity()
         print(mensagem)
+        self.refresh_treeview()
 
         self.entrada_cidade.delete(0, tk.END)
         self.entrada_estado.delete(0, tk.END)
@@ -87,6 +106,11 @@ class Cidade:
         cidade = bcidades(codcidade=codcidade)
         mensagem = cidade.deleteCity()
         print(mensagem)
+        self.refresh_treeview()
+        self.entrada_codcidade.delete(0, tk.END)
+        self.entrada_cidade.delete(0, tk.END)
+        self.entrada_estado.delete(0, tk.END)
+        self.entrada_uf.delete(0, tk.END)
 
     def alterar(self):
         cidade = bcidades(
@@ -97,6 +121,7 @@ class Cidade:
         )
         mensagem = cidade.updateCity()
         print(mensagem)
+        self.refresh_treeview()
 
 # Inicializa a aplicação
 root = tk.Tk()

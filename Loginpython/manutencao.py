@@ -1,5 +1,14 @@
 from banco import banco
 
+def populate_treeview(treeview, data):
+    # Primeiro, limpe qualquer dado existente no Treeview
+    for item in treeview.get_children():
+        treeview.delete(item)
+
+    # Agora, insira os novos dados
+    for row in data:
+        treeview.insert("", "end", values=row)
+
 class busuarios(object):
     def __init__(self, idusuario=0, nome="", telefone="", email="", usuario="", senha=""):
         self.idusuario = idusuario
@@ -60,6 +69,20 @@ class busuarios(object):
             return "Busca feita com sucesso!"
         except Exception as e:
             return f"Ocorreu um erro na busca do usuário: {str(e)}"
+
+    def selectall(self):
+        conn = banco()
+        try:
+            c = conn.conexao.cursor()
+            c.execute("select * from usuario")
+            rows = c.fetchall()
+            c.close()  # Fechar o cursor antes de retornar
+            return rows
+        except Exception as e:
+            print(f"Ocorreu um erro ao buscar os usuários: {str(e)}")
+            return []
+
+    
         
 class bcidades(object):
     def __init__(self, codcidade=0, nomecid="", estado="", uf=""):
@@ -117,6 +140,18 @@ class bcidades(object):
             return "Busca feita com sucesso!"
         except Exception as e:
             return f"Ocorreu um erro na busca da cidade: {str(e)}"
+        
+    def selectall(self):
+        conn = banco()
+        try:
+            c = conn.conexao.cursor()
+            c.execute("select * from cidade")
+            rows = c.fetchall()
+            c.close()  # Fechar o cursor antes de retornar
+            return rows
+        except Exception as e:
+            print(f"Ocorreu um erro ao buscar os usuários: {str(e)}")
+            return []
 
 class bclientes(object):
     def __init__(self, idcliente=0, nome="", telefone="", email="", codcidade=0):
@@ -186,4 +221,22 @@ class bclientes(object):
             c.close()
             return cidades
         except Exception as e:
-            return f"Ocorreu um erro ao buscar as cidades: {str(e)}"    
+            return f"Ocorreu um erro ao buscar as cidades: {str(e)}"   
+    
+    def selectall(self):
+        conn = banco()
+        try:
+            c = conn.conexao.cursor()
+            c.execute("""
+                SELECT c.idcliente, c.nome, c.telefone, c.email, ci.nomecid AS cidade
+                FROM cliente c
+                JOIN cidade ci ON c.codcidade = ci.codcidade
+            """)
+            rows = c.fetchall()
+            print(rows)
+            c.close()  # Fechar o cursor antes de retornar
+            return rows
+        except Exception as e:
+            print(f"Ocorreu um erro ao buscar os clientes: {str(e)}")
+            return []
+

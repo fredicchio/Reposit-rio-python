@@ -1,6 +1,7 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
-from manutencao import bclientes
+from manutencao import bclientes, populate_treeview
 
 class Clientes:
     def __init__(self, root):
@@ -66,6 +67,23 @@ class Clientes:
         root.grid_columnconfigure(3, weight=1)
         root.grid_columnconfigure(4, weight=1)
 
+        self.columns = ('ID', 'NOME', 'TELEFONE', 'EMAIL', 'CIDADE')
+        self.treeview = ttk.Treeview(root, columns=self.columns, show="headings")
+        for col in self.columns:
+            self.treeview.heading(col, text=col)
+
+        self.treeview.grid(row=8, column=0, columnspan=3, sticky="nsew")
+
+        # Chama o método de refresh ao iniciar
+        self.refresh_treeview()
+
+    def refresh_treeview(self):
+        data = bclientes().selectall()
+        if not data:
+            print("Nenhum dado encontrado ou ocorreu um erro ao buscar os dados.")
+        else:
+            populate_treeview(self.treeview, data)
+
     def carregarCidades(self):
         cliente = bclientes()
         cidades = cliente.getAllCities()
@@ -102,6 +120,7 @@ class Clientes:
             if cidade_index is not None:
                 self.lista_cidades.selection_set(cidade_index)
                 self.lista_cidades.activate(cidade_index)
+        self.refresh_treeview()
 
     def find_city_index(self, codcidade):
         for index, item in enumerate(self.lista_cidades.get(0, tk.END)):
@@ -123,6 +142,7 @@ class Clientes:
         resultado = cliente.insertClient()
         messagebox.showinfo("Resultado", resultado)
         self.carregarCidades()  # Atualiza a lista de cidades após adição
+        self.refresh_treeview()
 
     def excluir(self):
         idcliente = self.entrada_id.get()
@@ -140,6 +160,7 @@ class Clientes:
         resultado = cliente.deleteClient()
         messagebox.showinfo("Resultado", resultado)
         self.carregarCidades()  # Atualiza a lista de cidades após exclusão
+        self.refresh_treeview()
 
     def alterar(self):
         idcliente = self.entrada_id.get()
@@ -154,6 +175,7 @@ class Clientes:
 
         try:
             idcliente = int(idcliente)
+            
         except ValueError:
             messagebox.showerror("Erro", "O ID do cliente deve ser um número inteiro.")
             return
@@ -162,6 +184,7 @@ class Clientes:
         resultado = cliente.updateClient()
         messagebox.showinfo("Resultado", resultado)
         self.carregarCidades()  # Atualiza a lista de cidades após alteração
+        self.refresh_treeview()
 
 # Inicializa a aplicação
 if __name__ == "__main__":
