@@ -23,7 +23,7 @@ class MenuInicial:
         self.botao_4.grid(row=0, column=3, padx=10, pady=10)
 
     def abrir_usuario(self):
-        from Loginpython.paginausuario1 import Usuario
+        from paginausuario1 import Usuario
         # Cria uma nova janela e instancia a classe Usuario
         nova_janela = tk.Toplevel(self.root)
         app = Usuario(nova_janela)
@@ -35,7 +35,7 @@ class MenuInicial:
         app = Cidade(nova_janela)
 
     def abrir_clientes(self):
-        from Loginpython.paginaclientes1 import Clientes
+        from paginaclientes1 import Clientes
         # Cria uma nova janela e instancia a classe Cidade
         nova_janela = tk.Toplevel(self.root)
         app = Clientes(nova_janela)
