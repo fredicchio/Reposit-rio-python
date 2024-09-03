@@ -240,3 +240,8 @@ class bclientes(object):
             print(f"Ocorreu um erro ao buscar os clientes: {str(e)}")
             return []
 
+class blogin(object):
+    def __init__(self, usuario, senha):
+
+        self.usuario = usuario
+        self.senha = senha
