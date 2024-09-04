@@ -64,6 +64,9 @@ class Usuario:
         self.botaoExcluir = tk.Button(root, text="Excluir", width=20, command=self.excluir)
         self.botaoExcluir.grid(row=7, column=2, padx=10, pady=5)
 
+        self.botao_voltar = tk.Button(root, text="Voltar", command=self.root.destroy)
+        self.botao_voltar.grid(row=7, column=3, padx=10, pady=5)
+
         # Configura as colunas para expandirem conforme necessário
         root.grid_columnconfigure(1, weight=1)
         root.grid_columnconfigure(2, weight=1)

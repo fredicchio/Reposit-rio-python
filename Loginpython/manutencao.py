@@ -1,4 +1,5 @@
 from banco import banco
+from tkinter import messagebox
 
 def populate_treeview(treeview, data):
     # Primeiro, limpe qualquer dado existente no Treeview
@@ -26,8 +27,10 @@ class busuarios(object):
                       (self.nome, self.telefone, self.email, self.usuario, self.senha))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Usuário cadastrado com sucesso!")
             return "Usuário cadastrado com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na inserção do usuário: {str(e)}")
             return f"Ocorreu um erro na inserção do usuário: {str(e)}"
 
     def updateUser(self):
@@ -38,8 +41,10 @@ class busuarios(object):
                       (self.nome, self.telefone, self.email, self.usuario, self.senha, self.idusuario))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Usuário atualizado com sucesso!")
             return "Usuário atualizado com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na alteração do usuário: {str(e)}")
             return f"Ocorreu um erro na alteração do usuário: {str(e)}"
 
     def deleteUser(self):
@@ -49,8 +54,10 @@ class busuarios(object):
             c.execute("delete from usuario where idusuario = ?", (self.idusuario,))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Usuário excluído com sucesso!")
             return "Usuário excluído com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na exclusão do usuário: {str(e)}")
             return f"Ocorreu um erro na exclusão do usuário: {str(e)}"
 
     def selectUser(self):
@@ -66,8 +73,10 @@ class busuarios(object):
                 self.usuario = linha[4]
                 self.senha = linha[5]
             c.close()
+            messagebox.showinfo("Sucesso", "Busca feita com sucesso!")
             return "Busca feita com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na busca do usuário: {str(e)}")
             return f"Ocorreu um erro na busca do usuário: {str(e)}"
 
     def selectall(self):
@@ -79,51 +88,64 @@ class busuarios(object):
             c.close()  # Fechar o cursor antes de retornar
             return rows
         except Exception as e:
-            print(f"Ocorreu um erro ao buscar os usuários: {str(e)}")
+            messagebox.showerror("Erro", f"Ocorreu um erro ao buscar os usuários: {str(e)}")
             return []
 
-    
-        
 class bcidades(object):
-    def __init__(self, codcidade=0, nomecid="", estado="", uf=""):
+    def __init__(self, codcidade=0, nomecid="", uf=""):
         self.codcidade = codcidade
         self.nomecid = nomecid
-        self.estado = estado
         self.uf = uf
 
     def insertCity(self):
         banco_con = banco()
         try:
             c = banco_con.conexao.cursor()
-            c.execute("insert into cidade (nomecid, estado, uf) values (?, ?, ?)",
-                      (self.nomecid, self.estado, self.uf))
+            c.execute("insert into cidade (nomecid, uf) values (?, ?)",
+                      (self.nomecid, self.uf))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Cidade cadastrada com sucesso!")
             return "Cidade cadastrada com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na inserção da cidade: {str(e)}")
             return f"Ocorreu um erro na inserção da cidade: {str(e)}"
 
     def updateCity(self):
         banco_con = banco()
         try:
             c = banco_con.conexao.cursor()
-            c.execute("update cidade set nomecid = ?, estado = ?, uf = ? where codcidade = ?",
-                      (self.nomecid, self.estado, self.uf, self.codcidade))
+            c.execute("update cidade set nomecid = ?, uf = ? where codcidade = ?",
+                      (self.nomecid, self.uf, self.codcidade))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Cidade atualizada com sucesso!")
             return "Cidade atualizada com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na alteração da cidade: {str(e)}")
             return f"Ocorreu um erro na alteração da cidade: {str(e)}"
 
     def deleteCity(self):
         banco_con = banco()
         try:
             c = banco_con.conexao.cursor()
-            c.execute("delete from cidade where codcidade = ?", (self.codcidade,))
-            banco_con.conexao.commit()
-            c.close()
-            return "Cidade excluída com sucesso!"
+            # Verifica se a cidade está associada a algum cliente
+            c.execute("SELECT * FROM cliente WHERE codcidade = ?", (self.codcidade,))
+            resultado = c.fetchone()
+
+            if resultado is None:  # Se nenhum cliente está associado a essa cidade
+                c.execute("DELETE FROM cidade WHERE codcidade = ?", (self.codcidade,))
+                banco_con.conexao.commit()
+                c.close()
+                messagebox.showinfo("Sucesso", "Cidade excluída com sucesso!")
+                return "Cidade excluída com sucesso!"
+            else:
+                c.close()
+                # Exibe uma mensagem de erro utilizando messagebox
+                messagebox.showerror("Erro", "Não é possível excluir a cidade, pois ela está associada a um ou mais clientes.")
+                return "A exclusão foi cancelada."
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na exclusão da cidade: {str(e)}")
             return f"Ocorreu um erro na exclusão da cidade: {str(e)}"
 
     def selectCity(self):
@@ -134,13 +156,14 @@ class bcidades(object):
             for linha in c:
                 self.codcidade = linha[0]
                 self.nomecid = linha[1]
-                self.estado = linha[2]
-                self.uf = linha[3]
+                self.uf = linha[2]
             c.close()
+            messagebox.showinfo("Sucesso", "Busca feita com sucesso!")
             return "Busca feita com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na busca da cidade: {str(e)}")
             return f"Ocorreu um erro na busca da cidade: {str(e)}"
-        
+
     def selectall(self):
         conn = banco()
         try:
@@ -150,7 +173,7 @@ class bcidades(object):
             c.close()  # Fechar o cursor antes de retornar
             return rows
         except Exception as e:
-            print(f"Ocorreu um erro ao buscar os usuários: {str(e)}")
+            messagebox.showerror("Erro", f"Ocorreu um erro ao buscar as cidades: {str(e)}")
             return []
 
 class bclientes(object):
@@ -169,8 +192,10 @@ class bclientes(object):
                       (self.nome, self.telefone, self.email, self.codcidade))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Cliente cadastrado com sucesso!")
             return "Cliente cadastrado com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na inserção do cliente: {str(e)}")
             return f"Ocorreu um erro na inserção do cliente: {str(e)}"
 
     def updateClient(self):
@@ -181,8 +206,10 @@ class bclientes(object):
                       (self.nome, self.telefone, self.email, self.codcidade, self.idcliente))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Cliente atualizado com sucesso!")
             return "Cliente atualizado com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na alteração do cliente: {str(e)}")
             return f"Ocorreu um erro na alteração do cliente: {str(e)}"
 
     def deleteClient(self):
@@ -192,8 +219,10 @@ class bclientes(object):
             c.execute("DELETE FROM cliente WHERE idcliente = ?", (self.idcliente,))
             banco_con.conexao.commit()
             c.close()
+            messagebox.showinfo("Sucesso", "Cliente excluído com sucesso!")
             return "Cliente excluído com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na exclusão do cliente: {str(e)}")
             return f"Ocorreu um erro na exclusão do cliente: {str(e)}"
 
     def selectClient(self):
@@ -208,8 +237,10 @@ class bclientes(object):
                 self.email = linha[3]
                 self.codcidade = linha[4]
             c.close()
+            messagebox.showinfo("Sucesso", "Busca feita com sucesso!")
             return "Busca feita com sucesso!"
         except Exception as e:
+            messagebox.showerror("Erro", f"Ocorreu um erro na busca do cliente: {str(e)}")
             return f"Ocorreu um erro na busca do cliente: {str(e)}"
 
     def getAllCities(self):
@@ -221,8 +252,9 @@ class bclientes(object):
             c.close()
             return cidades
         except Exception as e:
-            return f"Ocorreu um erro ao buscar as cidades: {str(e)}"   
-    
+            messagebox.showerror("Erro", f"Ocorreu um erro ao buscar as cidades: {str(e)}")
+            return []
+
     def selectall(self):
         conn = banco()
         try:
@@ -237,11 +269,10 @@ class bclientes(object):
             c.close()  # Fechar o cursor antes de retornar
             return rows
         except Exception as e:
-            print(f"Ocorreu um erro ao buscar os clientes: {str(e)}")
+            messagebox.showerror("Erro", f"Ocorreu um erro ao buscar os clientes: {str(e)}")
             return []
 
 class blogin(object):
     def __init__(self, usuario, senha):
-
         self.usuario = usuario
         self.senha = senha

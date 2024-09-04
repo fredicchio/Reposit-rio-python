@@ -42,6 +42,7 @@ class TelaLogin:
             c.close()
             
             if resultado:
+                messagebox.showinfo("Verificado", "Login efetuado")
                 self.abrir_menu_inicial()
             else:
                 messagebox.showerror("Erro", "Usuário ou senha incorretos")

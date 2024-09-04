@@ -61,6 +61,9 @@ class Clientes:
         self.botao_alterar = tk.Button(root, text="Alterar", command=self.alterar)
         self.botao_alterar.grid(row=6, column=3, padx=10, pady=5)
 
+        self.botao_voltar = tk.Button(root, text="Voltar", command=self.root.destroy)
+        self.botao_voltar.grid(row=6, column=4, padx=10, pady=5)
+
         # Configura as colunas para expandirem conforme necessário
         root.grid_columnconfigure(1, weight=1)
         root.grid_columnconfigure(2, weight=1)

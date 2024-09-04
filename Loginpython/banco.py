@@ -2,7 +2,7 @@ import sqlite3
 
 class banco():
     def __init__(self):
-        self.conexao = sqlite3.connect('jacinto.db')
+        self.conexao = sqlite3.connect('jaime.db')
         self.createTables()
 
     def createTables(self):
@@ -24,7 +24,6 @@ class banco():
         CREATE TABLE IF NOT EXISTS cidade(
             codcidade INTEGER PRIMARY KEY AUTOINCREMENT,
             nomecid TEXT,
-            estado TEXT,
             uf TEXT
         )
         """)
