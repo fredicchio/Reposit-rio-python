@@ -20,8 +20,12 @@ class MenuInicial:
         self.botao_3 = tk.Button(self.container1, text="Clientes", command=self.abrir_clientes)
         self.botao_3.grid(row=0, column=2, padx=10, pady=10)
 
-        self.botao_4 = tk.Button(self.container1, text="Fechar", command=self.root.quit)
+        self.botao_4 = tk.Button(self.container1, text="Relatórios", command=self.abrir_relatorios)
         self.botao_4.grid(row=0, column=3, padx=10, pady=10)
+
+
+        self.botao_5 = tk.Button(self.container1, text="Fechar", command=self.root.quit)
+        self.botao_5.grid(row=0, column=4, padx=10, pady=10)
 
     def abrir_usuario(self):
         from paginausuario1 import Usuario
@@ -40,6 +44,16 @@ class MenuInicial:
         # Cria uma nova janela e instancia a classe Clientes
         nova_janela = tk.Toplevel(self.root)
         app = Clientes(nova_janela)
+
+    def abrir_relatorios(self):
+        from relatorios3 import Relatorio
+        
+        nova_janela = tk.Toplevel(self.root)
+        app = Relatorio(nova_janela)
+
+
+
+    
 
 # Inicializa a aplicação
 root = tk.Tk()
