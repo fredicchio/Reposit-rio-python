@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import Menu
 
 class MenuInicial:
     def __init__(self, root):
@@ -19,11 +20,15 @@ class MenuInicial:
         self.botao_3 = tk.Button(self.container1, text="Clientes", command=self.abrir_clientes)
         self.botao_3.grid(row=0, column=2, padx=10, pady=10)
 
-        self.botao_4 = tk.Button(self.container1, text="Fechar", command=self.root.quit)
+        self.botao_4 = tk.Button(self.container1, text="Relatórios", command=self.abrir_relatorios)
         self.botao_4.grid(row=0, column=3, padx=10, pady=10)
 
+
+        self.botao_5 = tk.Button(self.container1, text="Fechar", command=self.root.quit)
+        self.botao_5.grid(row=0, column=4, padx=10, pady=10)
+
     def abrir_usuario(self):
-        from Loginpython.paginausuario1 import Usuario
+        from paginausuario1 import Usuario
         # Cria uma nova janela e instancia a classe Usuario
         nova_janela = tk.Toplevel(self.root)
         app = Usuario(nova_janela)
@@ -35,13 +40,44 @@ class MenuInicial:
         app = Cidade(nova_janela)
 
     def abrir_clientes(self):
-        from Loginpython.paginaclientes1 import Clientes
-        # Cria uma nova janela e instancia a classe Cidade
+        from paginaclientes1 import Clientes
+        # Cria uma nova janela e instancia a classe Clientes
         nova_janela = tk.Toplevel(self.root)
         app = Clientes(nova_janela)
 
+    def abrir_relatorios(self):
+        from relatorios3 import Relatorio
+        
+        nova_janela = tk.Toplevel(self.root)
+        app = Relatorio(nova_janela)
+
+
+
+    
+
 # Inicializa a aplicação
 root = tk.Tk()
+
+# Criação da instância da interface principal
 app = MenuInicial(root)
+
+# Criação da barra de menu
+menubar = Menu(root)
+filemenu = Menu(menubar, tearoff=0)
+
+# Aqui utilizamos lambda para chamar os métodos da instância `app`
+filemenu.add_command(label="Cidade", command=app.abrir_cidade)
+filemenu.add_command(label="Clientes", command=app.abrir_clientes)
+filemenu.add_command(label="Usuario", command=app.abrir_usuario)
+filemenu.add_separator()
+filemenu.add_command(label="Exit", command=root.quit)
+
+# Adiciona o menu "File" na barra de menus
+menubar.add_cascade(label="File", menu=filemenu)
+
+# Configura a janela principal para usar a barra de menu
+root.config(menu=menubar)
+
+# Configura a janela principal para abrir maximizada
 root.state("zoomed")
 root.mainloop()
