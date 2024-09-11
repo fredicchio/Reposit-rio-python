@@ -1,7 +1,11 @@
 import tkinter as tk
+from tkinter import messagebox
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 from manutencao import busuarios, bcidades, bclientes
+import os
+
+caminho_arquivo = ''
 
 class Relatorio:
     def __init__(self, root):
@@ -48,6 +52,13 @@ class Relatorio:
             plt.close()
         print("PDF de clientes exportado com sucesso.")
 
+
+        msg = messagebox.askyesno("Relatório","Relatório gerado com sucesso, deseja abrí-lo?")
+        if msg:
+            os.startfile(pdf_file)
+
+
+
     def exportar_cidades_para_pdf(self):
         cidades = self.get_search_cidades()
         pdf_file = "cidades_exportadas.pdf"
@@ -61,6 +72,12 @@ class Relatorio:
             plt.close()
         print("PDF de cidades exportado com sucesso.")
 
+        msg = messagebox.askyesno("Relatório","Relatório gerado com sucesso, deseja abrí-lo?")
+        if msg:
+            os.startfile(pdf_file)
+
+
+
     def exportar_usuarios_para_pdf(self):
         usuarios = self.get_search_usuarios()
         pdf_file = "usuarios_exportados.pdf"
@@ -73,3 +90,8 @@ class Relatorio:
             pdf.savefig()
             plt.close()
         print("PDF de usuários exportado com sucesso.")
+
+        msg = messagebox.askyesno("Relatório","Relatório gerado com sucesso, deseja abrí-lo?")
+        if msg:
+            os.startfile(pdf_file)
+
