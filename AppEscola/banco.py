@@ -7,7 +7,7 @@ def cb():
             host = 'localhost',
             user = 'root',
             password = '',
-            database = 'escola3'
+            database = 'escolafred'
         )
         if conn.is_connected():
             print('Conexão bem sucedida')

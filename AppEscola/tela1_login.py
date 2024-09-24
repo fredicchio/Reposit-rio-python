@@ -42,7 +42,7 @@ class App(tk.Tk):
         self.button3.pack(pady=10)
 
     # Funções dos botões
-    def autenticação(self):
+    def autenticacao(self):
         # Conectando ao banco de dados
         conn, cursor = cb()
         if conn is not None and cursor is not None:
@@ -65,7 +65,9 @@ class App(tk.Tk):
                     if senha == senha_bd:
                         from tela_principal import MainApp
 
+                        self.window.destroy()
                         MainApp()
+                        
                     else:
                         print("Senha incorreta!")
                 else:
