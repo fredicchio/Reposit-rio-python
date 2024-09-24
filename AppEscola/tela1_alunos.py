@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from banco import *
+from banco import cb, fc
 
 class AlunosWindow:
     def __init__(self, root):
@@ -8,7 +8,7 @@ class AlunosWindow:
         self.root.title("Gerenciamento de Alunos")
 
         # Conectar ao banco de dados
-        self.conn, self.cursor = self.connect_db()
+        self.conn, self.cursor = cb()
 
         # Frame principal
         main_frame = tk.Frame(self.root)
